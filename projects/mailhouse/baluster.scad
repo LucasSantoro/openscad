@@ -1,4 +1,10 @@
 $fn = 100;
+global_h = 100;
+global_w = 80;
+bal_spacing = 6.35;
+half_sp = bal_spacing / 2;
+
+num_bal = floor(((global_w / 2)-half_sp) / bal_spacing );
 
 module baluster (h, r = 2)
 {   
@@ -33,8 +39,14 @@ module baluster (h, r = 2)
 }
 
 
-translate([0,50,0]) baluster(10);
-translate([0,55,0]) baluster(100);
-translate([0,60,0]) baluster(100);
-translate([0,65,0]) baluster(150);
-translate([0,70,0]) baluster(150);
+
+//top rail
+translate([0,0, (0.5 * global_h)]) cube([2, global_w, 2], center=true);
+
+//bottom rail
+translate([0,0, -(0.5 * global_h)]) cube([2, global_w, 2], center=true);
+
+for(i = [0:num_bal]) {
+    translate([0,(i * bal_spacing)+half_sp,0]) baluster(global_h);
+    translate([0,-(i * bal_spacing)-half_sp,0]) baluster(global_h);
+}
