@@ -1,12 +1,13 @@
 $fn = 100;
 global_h = 52;
-global_w = 82;
+global_w = 112.5;
+global_r = 1.25;
 bal_spacing = 6.35;
 half_sp = bal_spacing / 2;
 
 num_bal = floor(((global_w / 2)-bal_spacing) / bal_spacing );
 
-module baluster (h, r = 1)
+module baluster (h = global_h, r = global_r)
 {   
     d = r * 2;
     core_r = r / 2;
@@ -43,10 +44,17 @@ module baluster (h, r = 1)
 //top rail
 //translate([0,0, (0.5 * global_h)]) cube([2, global_w, 2], center=true);
 
-//bottom rail
-translate([0,0, -(0.5 * global_h)]) cube([3, global_w, 3], center=true);
 
-for(i = [0:num_bal]) {
-    translate([0,(i * bal_spacing)+half_sp,0]) baluster(global_h);
-    translate([0,-(i * bal_spacing)-half_sp,0]) baluster(global_h);
+
+union() {
+    //bottom rail
+    translate([0,0, -(0.5 * global_h)]) cube([3*global_r, global_w, 3*global_r], center=true);
+        
+    //bottom rail mounting dowel
+    translate([0,0, -(0.5 * global_h)]) rotate([90,0,0]) cylinder(h=global_w * 1.20, r=global_r, center=true);
+
+    for(i = [0:num_bal]) {
+        translate([0,(i * bal_spacing)+half_sp,0]) baluster();
+        translate([0,-(i * bal_spacing)-half_sp,0]) baluster();
+    }
 }
